@@ -31,13 +31,6 @@ def checkAMPM(value):
     else:
         return False
     
-# def checkSeriesAMPM(series):
-#     allValues = ['AM', 'PM', 'am', 'pm', 'a.m.', 'p.m.', 'A.M.', 'P.M.']
-#     if any(x in series[1] for x in allValues):
-#         return True
-#     else:
-#         return False
-
 def checkPM(value):
     allValues = ['PM', 'pm', 'p.m.', 'P.M.']
     if checkNan(value) == False:
@@ -48,12 +41,6 @@ def checkPM(value):
     else:
         return False
     
-# def checkSeriesPM(series):
-#     if any(x in series[1] for x in allValues):
-#         return True
-#     else:
-#         return False
-
 def checkColon(value):
     if checkNan(value) == False:
         if ':' in value:
@@ -112,7 +99,6 @@ def hasEndAMPMAndNoColon(time, endTime):
         return re.split('a|A', time)[0].strip() + ':00'
 
 def checkAll(time):
-    # print('checkAll, time: ', time)
     finalTimes = pd.Series()
     isNan = checkNan(time)
 
@@ -121,17 +107,12 @@ def checkAll(time):
         finalTimes[1] = ''
     else:
         newTime = time.split('-')
-        # print('checkAll, newTime: ', newTime)
-        # isNan = checkNan(time)
         startHasAMPM = checkAMPM(newTime[0])
-        startHasPM = checkPM(newTime[0])
+        # startHasPM = checkPM(newTime[0])
         startHasColon = checkColon(newTime[0])
         endHasAMPM = checkAMPM(newTime[1])
-        endHasPM = checkPM(newTime[1])
+        # endHasPM = checkPM(newTime[1])
         endHasColon = checkColon(newTime[1])
-
-        # if (isNan):
-        #     finalTime = ''
 
         if (startHasAMPM and startHasColon):
             finalTimes[0] = hasAMPMAndColon(newTime[0])
@@ -143,44 +124,20 @@ def checkAll(time):
             finalTimes[0] = hasEndAMPMAndNoColon(newTime[0], newTime[1])
         else:
             finalTimes[0] = newTime[0]
-
-        
-
-            # timeBeforeColon = time.split(':')[0].strip()
-            # timeAfterColonWithAMPM = time.split(':')[1]
-            # timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
-            # if (hasPM):
-            #     if int(timeBeforeColon) == 12:
-            #         finalTime = '12:' + timeAfterColon
-            #     else:
-            #         finalTime = str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
-            # else:
-            #     finalTime = timeBeforeColon + ':' + timeAfterColon
-
         
         if (endHasAMPM and endHasColon):
             finalTimes[1] = hasAMPMAndColon(newTime[1])
         elif (endHasAMPM and endHasColon == False):
             finalTimes[1] = hasAMPMAndNoColon(newTime[1])
-
-            # if (hasPM):
-            #     if int(re.split('p|P', time)[0].strip()) == 12:
-            #         finalTime = '12:00'
-            #     else:
-            #         finalTime = str(int(re.split('p|P', time)[0].strip()) + 12) + ':00'
-            # else:
-            #     finalTime = re.split('a|A', time)[0].strip() + ':00'
         else:
             finalTimes[1] = newTime[1]
 
     return finalTimes
 
 for day in days_list:
-    # meals_both - split on the ampersand
     meals_both = meals[day].str.split('&', n=1, expand=True)
 
     meals_first = meals_both[0].str.split('-', n=1, expand=True)
-    # print('meals_first: ', meals_first)
     meals_second = meals_both[1].str.split('-', n=1, expand=True)
 
     meals_first_parsed = pd.Series()    
@@ -201,21 +158,6 @@ for day in days_list:
         meals_second_parsed_start[count] = time[0]
         meals_second_parsed_end[count] = time[1]
 
-    # meals_first_end = pd.Series()
-    # for count, time in enumerate(meals_first[1]):
-    #     meals_first_end[count] = checkAll(time)
-
-    # meals_second_start = pd.Series()
-    # for count, time in enumerate(meals_second[0]):
-    #     meals_second_start[count] = checkAll(time)
-    # meals_second_start = meals_second[0]
-
-    # meals_second_end = pd.Series()
-    # for count, time in enumerate(meals_second[1]):
-    #     meals_second_end[count] = checkAll(time)
-    # meals_second_end = meals_second[1]
-
-    # print('meals_first_parsed_start: ', meals_first_parsed_start)
     meals[day+'_start1']=meals_first_parsed_start
     meals[day+'_end1']=meals_first_parsed_end
     meals[day+'_start2']=meals_second_parsed_start
