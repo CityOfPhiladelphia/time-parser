@@ -99,12 +99,12 @@ def hasEndAMPMAndNoColon(time, endTime):
         return re.split('a|A', time)[0].strip() + ':00'
 
 def checkAll(time):
-    finalTimes = pd.Series()
+    parsedTimes = pd.Series()
     isNan = checkNan(time)
 
     if (isNan):
-        finalTimes[0] = ''
-        finalTimes[1] = ''
+        parsedTimes[0] = ''
+        parsedTimes[1] = ''
     else:
         startAndEnd = time.split('-')
         startHasAMPM = checkAMPM(startAndEnd[0])
@@ -113,24 +113,24 @@ def checkAll(time):
         endHasColon = checkColon(startAndEnd[1])
 
         if (startHasAMPM and startHasColon):
-            finalTimes[0] = hasAMPMAndColon(startAndEnd[0])
+            parsedTimes[0] = hasAMPMAndColon(startAndEnd[0])
         elif (startHasAMPM and startHasColon == False):
-            finalTimes[0] = hasAMPMAndNoColon(startAndEnd[0])
+            parsedTimes[0] = hasAMPMAndNoColon(startAndEnd[0])
         elif (startHasAMPM == False and endHasAMPM and startHasColon):
-            finalTimes[0] = hasEndAMPMAndColon(startAndEnd[0], startAndEnd[1])
+            parsedTimes[0] = hasEndAMPMAndColon(startAndEnd[0], startAndEnd[1])
         elif (startHasAMPM == False and endHasAMPM and startHasColon == False):
-            finalTimes[0] = hasEndAMPMAndNoColon(startAndEnd[0], startAndEnd[1])
+            parsedTimes[0] = hasEndAMPMAndNoColon(startAndEnd[0], startAndEnd[1])
         else:
-            finalTimes[0] = startAndEnd[0]
+            parsedTimes[0] = startAndEnd[0]
         
         if (endHasAMPM and endHasColon):
-            finalTimes[1] = hasAMPMAndColon(startAndEnd[1])
+            parsedTimes[1] = hasAMPMAndColon(startAndEnd[1])
         elif (endHasAMPM and endHasColon == False):
-            finalTimes[1] = hasAMPMAndNoColon(startAndEnd[1])
+            parsedTimes[1] = hasAMPMAndNoColon(startAndEnd[1])
         else:
-            finalTimes[1] = startAndEnd[1]
+            parsedTimes[1] = startAndEnd[1]
 
-    return finalTimes
+    return parsedTimes
 
 for day in days_list:
     meals_both = meals[day].str.split('&', n=1, expand=True)
