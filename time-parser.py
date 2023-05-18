@@ -89,8 +89,8 @@ def hasAMPMAndNoColon(time):
         return re.split('a|A', time)[0].strip() + ':00'
     
 def hasEndAMPMAndNoColon(time, endTime):
-    hasPM = checkPM(endTime)
-    if (hasPM):
+    hasEndPM = checkPM(endTime)
+    if (hasEndPM):
         if int(re.split('p|P', time)[0].strip()) == 12:
             return '12:00'
         else:
@@ -106,39 +106,37 @@ def checkAll(time):
         finalTimes[0] = ''
         finalTimes[1] = ''
     else:
-        newTime = time.split('-')
-        startHasAMPM = checkAMPM(newTime[0])
-        # startHasPM = checkPM(newTime[0])
-        startHasColon = checkColon(newTime[0])
-        endHasAMPM = checkAMPM(newTime[1])
-        # endHasPM = checkPM(newTime[1])
-        endHasColon = checkColon(newTime[1])
+        startAndEnd = time.split('-')
+        startHasAMPM = checkAMPM(startAndEnd[0])
+        startHasColon = checkColon(startAndEnd[0])
+        endHasAMPM = checkAMPM(startAndEnd[1])
+        endHasColon = checkColon(startAndEnd[1])
 
         if (startHasAMPM and startHasColon):
-            finalTimes[0] = hasAMPMAndColon(newTime[0])
+            finalTimes[0] = hasAMPMAndColon(startAndEnd[0])
         elif (startHasAMPM and startHasColon == False):
-            finalTimes[0] = hasAMPMAndNoColon(newTime[0])
+            finalTimes[0] = hasAMPMAndNoColon(startAndEnd[0])
         elif (startHasAMPM == False and endHasAMPM and startHasColon):
-            finalTimes[0] = hasEndAMPMAndColon(newTime[0], newTime[1])
+            finalTimes[0] = hasEndAMPMAndColon(startAndEnd[0], startAndEnd[1])
         elif (startHasAMPM == False and endHasAMPM and startHasColon == False):
-            finalTimes[0] = hasEndAMPMAndNoColon(newTime[0], newTime[1])
+            finalTimes[0] = hasEndAMPMAndNoColon(startAndEnd[0], startAndEnd[1])
         else:
-            finalTimes[0] = newTime[0]
+            finalTimes[0] = startAndEnd[0]
         
         if (endHasAMPM and endHasColon):
-            finalTimes[1] = hasAMPMAndColon(newTime[1])
+            finalTimes[1] = hasAMPMAndColon(startAndEnd[1])
         elif (endHasAMPM and endHasColon == False):
-            finalTimes[1] = hasAMPMAndNoColon(newTime[1])
+            finalTimes[1] = hasAMPMAndNoColon(startAndEnd[1])
         else:
-            finalTimes[1] = newTime[1]
+            finalTimes[1] = startAndEnd[1]
 
     return finalTimes
 
 for day in days_list:
     meals_both = meals[day].str.split('&', n=1, expand=True)
 
-    meals_first = meals_both[0].str.split('-', n=1, expand=True)
-    meals_second = meals_both[1].str.split('-', n=1, expand=True)
+    # meals_first = meals_both[0].str.split('-', n=1, expand=True)
+    # meals_second = meals_both[1].str.split('-', n=1, expand=True)
 
     meals_first_parsed = pd.Series()    
     for count, time in enumerate(meals_both[0]):
