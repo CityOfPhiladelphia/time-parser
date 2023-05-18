@@ -3,6 +3,7 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+import re
 
 load_dotenv()
 
@@ -56,20 +57,31 @@ def checkAll (time):
     hasColon = checkColon(time)
 
     if (isNan):
-        # return 'nan'
-        finalTime = 'nan'
+        finalTime = ''
     elif (hasAMPM and hasColon):
-        timeBeforeColon = time.split(':')[0]
-        timeAfterColon = time.split(':')[1].split(' ')[0]
+        timeBeforeColon = time.split(':')[0].strip()
+        timeAfterColonWithAMPM = time.split(':')[1]
+        timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
         if (hasPM):
-            finalTime = str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
+            if int(timeBeforeColon) == 12:
+                finalTime = '12:' + timeAfterColon
+            else:
+                finalTime = str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
         else:
             finalTime = timeBeforeColon + ':' + timeAfterColon
     elif (hasAMPM and hasColon == False):
-        finalTime = time.split(' ')[0]
+        if (hasPM):
+            if int(re.split('p|P', time)[0].strip()) == 12:
+                finalTime = '12:00'
+            else:
+                finalTime = str(int(re.split('p|P', time)[0].strip()) + 12) + ':00'
+        else:
+            finalTime = re.split('a|A', time)[0].strip() + ':00'
     else:
         finalTime = time
-    print(isNan, hasAMPM, hasColon, time, finalTime)
+
+    return finalTime
+    # print(isNan, hasAMPM, hasColon, time, finalTime)
 
 for day in days_list:
     # meals_both - split on the ampersand
@@ -78,28 +90,23 @@ for day in days_list:
     meals_first = meals_both[0].str.split('-', n=1, expand=True)
     meals_second = meals_both[1].str.split('-', n=1, expand=True)
 
-    meals_first_start = meals_first[0]
-    
-    for time in meals_first_start:
-        checkAll(time)
-        # if pd.isna(time):
-        # if checkNan(time):
-        #     print('time is nan:', time)
+    meals_first_start = pd.Series()    
+    for count, time in enumerate(meals_first[0]):
+        meals_first_start[count] = checkAll(time)
 
-        # elif isinstance(time, float):
-        #     print('time is float:', time)
+    meals_first_end = pd.Series()
+    for count, time in enumerate(meals_first[1]):
+        meals_first_end[count] = checkAll(time)
 
-        # elif ':' in time:
-        #     print('time is a string, colon found in first start:', time)
-        # else:
-        #     # meals_first_start = meals_first_start + ':00'
-        #     print('time is a string, colon not found in first start:', time)
+    meals_second_start = pd.Series()
+    for count, time in enumerate(meals_second[0]):
+        meals_second_start[count] = checkAll(time)
+    # meals_second_start = meals_second[0]
 
-
-    meals_first_end = meals_first[1]
-
-    meals_second_start = meals_second[0]
-    meals_second_end = meals_second[1]
+    meals_second_end = pd.Series()
+    for count, time in enumerate(meals_second[1]):
+        meals_second_end[count] = checkAll(time)
+    # meals_second_end = meals_second[1]
 
     meals[day+'_start1']=meals_first_start
     meals[day+'_end1']=meals_first_end
