@@ -55,8 +55,8 @@ def checkForColon(value):
         return False
 
 # function to return single time if the value includes a colon and AM or PM
-def hasColonAndAMPM(time):
-    print('hasColonAndAMPM, time: ', time)
+def parseTimeWithColonAndAMPM(time):
+    print('parseTimeWithColonAndAMPM, time: ', time)
     hasPM = checkForPM(time.strip())
     timeBeforeColon = time.split(':')[0].strip()
     timeAfterColonWithAMPM = time.split(':')[1]
@@ -70,8 +70,8 @@ def hasColonAndAMPM(time):
         return timeBeforeColon + ':' + timeAfterColon
 
 # function to return single time if the value includes a colon, the start time does NOT include AM or PM, and the end time includes AM or PM
-def hasColonAndEndAMPM(time, endTime):
-    print('hasColonAndEndAMPM, time: ', time)
+def parseTimeWithColonAndEndAMPM(time, endTime):
+    print('parseTimeWithColonAndEndAMPM, time: ', time)
     hasPM = checkForPM(endTime.strip())
     timeBeforeColon = time.split(':')[0].strip()
     timeAfterColonWithAMPM = time.split(':')[1]
@@ -85,7 +85,7 @@ def hasColonAndEndAMPM(time, endTime):
         return timeBeforeColon + ':' + timeAfterColon
 
 # function to return single time if the value does NOT include a colon and DOES include AM or PM
-def hasNoColonAndAMPM(time):
+def parseTimeWithNoColonAndAMPM(time):
     hasPM = checkForPM(time)
     if (hasPM):
         if int(re.split('p|P', time)[0].strip()) == 12:
@@ -96,7 +96,7 @@ def hasNoColonAndAMPM(time):
         return re.split('a|A', time)[0].strip() + ':00'
 
 # function to return single time if the value does NOT include a colon, the start time does NOT include AM or PM, and the end time includes AM or PM
-def hasNoColonAndEndAMPM(time, endTime):
+def parseTimeWithNoColonAndEndAMPM(time, endTime):
     hasEndPM = checkForPM(endTime)
     if (hasEndPM):
         if int(re.split('p|P', time)[0].strip()) == 12:
@@ -122,20 +122,20 @@ def parseMealTimes(stringTime):
         endHasColon = checkForColon(startAndEndTimes[1])
 
         if (startHasAMPM and startHasColon):
-            parsedTimes[0] = hasColonAndAMPM(startAndEndTimes[0])
+            parsedTimes[0] = parseTimeWithColonAndAMPM(startAndEndTimes[0])
         elif (startHasAMPM and startHasColon == False):
-            parsedTimes[0] = hasNoColonAndAMPM(startAndEndTimes[0])
+            parsedTimes[0] = parseTimeWithNoColonAndAMPM(startAndEndTimes[0])
         elif (startHasAMPM == False and endHasAMPM and startHasColon):
-            parsedTimes[0] = hasColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
+            parsedTimes[0] = parseTimeWithColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
         elif (startHasAMPM == False and endHasAMPM and startHasColon == False):
-            parsedTimes[0] = hasNoColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
+            parsedTimes[0] = parseTimeWithNoColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
         else:
             parsedTimes[0] = startAndEndTimes[0]
         
         if (endHasAMPM and endHasColon):
-            parsedTimes[1] = hasColonAndAMPM(startAndEndTimes[1])
+            parsedTimes[1] = parseTimeWithColonAndAMPM(startAndEndTimes[1])
         elif (endHasAMPM and endHasColon == False):
-            parsedTimes[1] = hasNoColonAndAMPM(startAndEndTimes[1])
+            parsedTimes[1] = parseTimeWithNoColonAndAMPM(startAndEndTimes[1])
         else:
             parsedTimes[1] = startAndEndTimes[1]
 
