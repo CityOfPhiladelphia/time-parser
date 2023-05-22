@@ -17,6 +17,8 @@ You can put the file paths into an .env file within the project:
 
 2-3pm (neither time has a colon, only the 2nd time has an AM or PM)
 
+### General rules:
+
 Uppercase and lowercase "AM" and "pm", and including periods between the letters (a.m.) are all handled.
 
 Spaces or lack of spaces between the times and the dashes are all handled.
