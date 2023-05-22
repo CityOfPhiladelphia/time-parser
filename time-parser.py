@@ -171,4 +171,9 @@ for day in days_list:
     meals[day+'_start2']=meals_second_parsed_start
     meals[day+'_end2']=meals_second_parsed_end
 
+# TODO - remove the original columns
+# TODO - handle days of the week with different capitalization
+# TODO - handle different ways of breaking up 2 meal windows (BK, LN, etc.)
+# TODO - add single "exception" field for each day of the week
+
 meals.to_csv(OUTPUT_FILE)
