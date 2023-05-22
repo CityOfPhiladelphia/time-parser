@@ -17,6 +17,9 @@ You can put the file paths into an .env file within the project:
 
 2-3pm (neither time has a colon, only the 2nd time has an AM or PM)
 
+10-11am & 4:30-6 PM (2 times windows with different combinations of the structures above)
+
+
 ### General rules:
 
 Uppercase and lowercase "AM" and "pm", and including periods between the letters (a.m.) are all handled.
@@ -41,3 +44,6 @@ function: parseTimeWithNoColonAndEndAMPM
 
     2-3pm --> | 14:00 | 15:00 |
 
+handling 2 time windows
+
+    10-11am & 4:30-6 PM --> | 10:00 | 11:00 | 16:30 | 18:00 |
