@@ -26,14 +26,18 @@ Spaces or lack of spaces between the times and the dashes are all handled.
 ### 4 main parsing functions:
 
 function: parseTimeWithColonAndAMPM
-7:30AM - 12PM --> | 7:30 | 12:00 |
+
+    7:30AM - 12PM --> | 7:30 | 12:00 |
 
 function: parseTimeWithColonAndEndAMPM
-12:00-1:30PM --> | 12:00 | 13:30 |
+
+    12:00-1:30PM --> | 12:00 | 13:30 |
 
 function: parseTimeWithNoColonAndAMPM
-11AM - 1PM --> | 11:00 | 13:00 |
+
+    11AM - 1PM --> | 11:00 | 13:00 |
 
 function: parseTimeWithNoColonAndEndAMPM
-2-3pm --> | 14:00 | 15:00 |
+
+    2-3pm --> | 14:00 | 15:00 |
 
