@@ -10,8 +10,11 @@ You can put the file paths into an .env file within the project:
 The string stuctures that are handled include:
 
 7:30AM - 12PM (1 time has a colon, both times have AM or PM)
+
 12:00-1:30PM (both times have colons, only the 2nd time has an AM or PM)
+
 11AM - 1PM (neither time has a colon, both times have AM or PM)
+
 2-3pm (neither time has a colon, only the 2nd time has an AM or PM)
 
 Uppercase and lowercase "AM" and "pm", and including periods between the letters (a.m.) are all handled.
