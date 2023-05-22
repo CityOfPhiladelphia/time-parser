@@ -18,9 +18,11 @@ The string stuctures that are handled include:
 2-3pm (neither time has a colon, only the 2nd time has an AM or PM)
 
 
+
 Uppercase and lowercase "AM" and "pm", and including periods between the letters (a.m.) are all handled.
 
 Spaces or lack of spaces between the times and the dashes are all handled.
+
 
 
 There are 4 main parsing functions:
