@@ -205,9 +205,9 @@ def splitMealWindows(stringTimes):
             splitTimes1.append('')
             splitTimes2.append('')
         else:
-            splitTimes1.append(re.split('&|,|and', stringTime)[0].strip())
-            if (len(re.split('&|,|and', stringTime)) > 1):
-                splitTimes2.append(re.split('&|,|and', stringTime)[1].strip())
+            splitTimes1.append(re.split('&|,|;|and', stringTime)[0].strip())
+            if (len(re.split('&|,|;|and', stringTime)) > 1):
+                splitTimes2.append(re.split('&|,|;|and', stringTime)[1].strip())
             else:
                 splitTimes2.append('')
     
