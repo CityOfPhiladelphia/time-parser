@@ -1,6 +1,6 @@
 # time-parser
 
-![](https://readme-github-images.s3.amazonaws.com/time-parser/csv_after_parse.PNG)
+![](https://readme-github-images.s3.amazonaws.com/time-parser/csv_after_parse_01.PNG)
 
 time-parser is a script which reads in a csv, parses strings that hold time information, and breaks them into fields that hold standardized 24-hour time strings.  It outputs a second csv.
 
