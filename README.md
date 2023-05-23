@@ -1,5 +1,7 @@
 # time-parser
 
+![](https://readme-github-images.s3.amazonaws.com/time-parser/csv_before_parse.PNG)
+
 time-parser is a script which reads in a csv, parses strings that hold time information, and breaks them into fields that hold standardized 24-hour time strings.  It outputs a second csv.
 
 You can put the file paths into an .env file within the project:
