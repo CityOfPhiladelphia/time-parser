@@ -46,6 +46,16 @@ function: parseTimeWithNoColonAndEndAMPM
 
     2-3pm --> | 14:00 | 15:00 |
 
-handling 2 time windows
+### handling 2 time windows:
 
     10-11am & 4:30-6 PM --> | 10:00 | 11:00 | 16:30 | 18:00 |
+
+### handling special cases:
+
+When the first time within a window does not have and AM or PM, but the 2nd time DOES have an AM or PM, it uses the AM or PM of the 2nd time to parse the first time.  This could potentially cause confusion for time windows around the noon time of day.  If you use the PM for both in "11:00 - 12:00 PM", the 11:00 will get changed to 23:00.
+
+    BK 8-8:30 AM, LN 11-12PM --> | 8:00 | 8:30 | 23:00 | 12:00 | 
+
+Special checks have been put in, to keep "11:00AM" as "11:00" in those scenarios:
+
+    BK 8-8:30 AM, LN 11-12PM --> | 8:00 | 8:30 | 11:00 | 12:00 | 
