@@ -90,6 +90,8 @@ def parseTimeWithColonAndAMPM(time):
     # print('parseTimeWithColonAndAMPM, time: ', time)
     hasPM = checkForPM(time.strip())
     timeBeforeColon = time.split(':')[0].strip()
+    if (int(timeBeforeColon) < 10):
+        timeBeforeColon = '0' + timeBeforeColon
     timeAfterColonWithAMPM = time.split(':')[1]
     timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
     if (hasPM):
@@ -99,6 +101,43 @@ def parseTimeWithColonAndAMPM(time):
             return str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
     else:
         return timeBeforeColon + ':' + timeAfterColon
+    
+# function to return single time if the value includes a colon and AM or PM
+def parseStartTimeWithColonAndNoAMPMs(startTime, endTime):
+    # print('parseTimeWithColonAndAMPM, time: ', time)
+    # hasPM = checkForPM(time.strip())
+    startTimeBeforeColon = startTime.split(':')[0].strip()
+    if (int(startTimeBeforeColon) < 10):
+        startTimeBeforeColon = '0' + startTimeBeforeColon
+    startTimeAfterColon = startTime.split(':')[1]
+    # timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
+    # if (hasPM):
+    #     if int(timeBeforeColon) == 12:
+    #         return '12:' + timeAfterColon
+    #     else:
+    #         return str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
+    # else:
+    return startTimeBeforeColon + ':' + startTimeAfterColon
+
+# function to return single time if the value includes a colon and AM or PM
+def parseEndTimeWithColonAndNoAMPMs(startTime, endTime):
+    # print('parseTimeWithColonAndAMPM, time: ', time)
+    # hasPM = checkForPM(time.strip())
+    startTimeBeforeColon = startTime.split(':')[0].strip()
+    endTimeBeforeColon = endTime.split(':')[0].strip()
+    if (int(endTimeBeforeColon) < int(startTimeBeforeColon)):
+        endTimeBeforeColon = str(int(endTimeBeforeColon) + 12)
+    elif (int(endTimeBeforeColon) < 10):
+        endTimeBeforeColon = '0' + endTimeBeforeColon
+    endTimeAfterColon = endTime.split(':')[1]
+    # timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
+    # if (hasPM):
+    #     if int(timeBeforeColon) == 12:
+    #         return '12:' + timeAfterColon
+    #     else:
+    #         return str(int(timeBeforeColon) + 12) + ':' + timeAfterColon
+    # else:
+    return endTimeBeforeColon + ':' + endTimeAfterColon
 
 # function to return single time if the value includes a colon, the start time does NOT include AM or PM, and the end time includes AM or PM
 def parseTimeWithColonAndEndAMPM(time, endTime):
@@ -107,6 +146,8 @@ def parseTimeWithColonAndEndAMPM(time, endTime):
     endIs12 = checkIs12(endTime.strip())
     startIs10or11 = checkIs10or11(time.strip())
     timeBeforeColon = time.split(':')[0].strip()
+    if (int(timeBeforeColon) < 10):
+        timeBeforeColon = '0' + timeBeforeColon
     timeAfterColonWithAMPM = time.split(':')[1]
     timeAfterColon = re.split('a|A|p|P', timeAfterColonWithAMPM)[0].strip()
     if (endHasPM):
@@ -128,7 +169,10 @@ def parseTimeWithNoColonAndAMPM(time):
         else:
             return str(int(re.split('p|P', time)[0].strip()) + 12) + ':00'
     else:
-        return re.split('a|A', time)[0].strip() + ':00'
+        if (int(re.split('a|A', time)[0].strip()) < 10):
+            return '0' + re.split('a|A', time)[0].strip() + ':00'
+        else:
+            return re.split('a|A', time)[0].strip() + ':00'
 
 # function to return single time if the value does NOT include a colon, the start time does NOT include AM or PM, and the end time includes AM or PM
 def parseTimeWithNoColonAndEndAMPM(time, endTime):
@@ -143,10 +187,14 @@ def parseTimeWithNoColonAndEndAMPM(time, endTime):
         else:
             return str(int(re.split('p|P', time)[0].strip()) + 12) + ':00'
     else:
-        return re.split('a|A', time)[0].strip() + ':00'
+        if (int(re.split('a|A', time)[0].strip()) < 10):
+            return '0' + re.split('a|A', time)[0].strip() + ':00'
+        else:
+            return re.split('a|A', time)[0].strip() + ':00'
 
 # function that takes a string that includes start and end time, and returns a list of the parsed start and end times
 def parseMealWindowTimes(stringTime):
+    # print('parseMealWindowTimes, stringTime:', stringTime)
     parsedTimes = pd.Series()
     isNan = checkForNan(stringTime)
 
@@ -173,9 +221,12 @@ def parseMealWindowTimes(stringTime):
             parsedTimes[0] = parseTimeWithNoColonAndAMPM(startAndEndTimes[0])
         elif (startHasAMPM == False and endHasAMPM and startHasColon):
             parsedTimes[0] = parseTimeWithColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
+        elif (startHasAMPM == False and endHasAMPM == False and startHasColon):
+            parsedTimes[0] = parseStartTimeWithColonAndNoAMPMs(startAndEndTimes[0], startAndEndTimes[1])
         elif (startHasAMPM == False and endHasAMPM and startHasColon == False):
             parsedTimes[0] = parseTimeWithNoColonAndEndAMPM(startAndEndTimes[0], startAndEndTimes[1])
         elif (startHasAMPM == False and endHasAMPM == False and startHasColon == False):
+            # print('startAndEndTimes[0]', startAndEndTimes[0], 'startAndEndTimes[1]', startAndEndTimes[1])
             parsedTimes[0] = startAndEndTimes[0] + ':00'
         else:
             parsedTimes[0] = startAndEndTimes[0]
@@ -185,9 +236,16 @@ def parseMealWindowTimes(stringTime):
             parsedTimes[1] = parseTimeWithColonAndAMPM(startAndEndTimes[1])
         elif (endHasAMPM and endHasColon == False):
             parsedTimes[1] = parseTimeWithNoColonAndAMPM(startAndEndTimes[1])
+        elif (endHasAMPM == False and endHasColon):
+            parsedTimes[1] = parseEndTimeWithColonAndNoAMPMs(startAndEndTimes[0], startAndEndTimes[1])
         elif (endHasAMPM == False and endHasColon == False):
-            if (startAndEndTimes[1] < startAndEndTimes[0]):
+            # print('endHasAMPM == False and endHasColon == False startAndEndTimes:', startAndEndTimes)
+            if (startAndEndTimes[1] > startAndEndTimes[0]):
+                # print('startAndEndTimes[0]', startAndEndTimes[0], 'startAndEndTimes[1]', startAndEndTimes[1])
                 parsedTimes[1] = str(int(startAndEndTimes[1])+12) + ':00'
+            else:
+                parsedTimes[1] = parseTimeWithNoColonAndAMPM(startAndEndTimes[1])
+                # print('startAndEndTimes[0]', startAndEndTimes[0], 'startAndEndTimes[1]', startAndEndTimes[1], 'parsedTimes', parsedTimes)
         else:
             parsedTimes[1] = startAndEndTimes[1]
 
@@ -224,9 +282,11 @@ for day in days_list:
     meals_first_parsed = pd.Series()    
     for count, stringTime in enumerate(meals_both[0]):
         meals_first_parsed[count] = parseMealWindowTimes(stringTime)
+        # print('meals_first_parsed[count]', meals_first_parsed[count], 'count:', count)
     meals_first_parsed_start = pd.Series()
     meals_first_parsed_end = pd.Series()
     for count, parsedTime in enumerate(meals_first_parsed):
+        # print('parsedTime', parsedTime, 'parsedTime[0]', parsedTime[0], 'count:', count)
         meals_first_parsed_start[count] = parsedTime[0]
         meals_first_parsed_end[count] = parsedTime[1]
 
